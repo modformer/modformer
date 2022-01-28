@@ -6,3 +6,7 @@ members = [
     # Modules (compiled as wasm32-wasi)
     "modules/modformer_fs",
 ]
+
+[profile.release]
+lto = "fat"
+opt-level = "s"

@@ -1,16 +1,12 @@
+cargo-features = ["per-package-target"]
+
 [package]
 name = "modformer_fs"
 version = "0.1.0"
 edition = "2021"
+forced-target = "wasm32-wasi"
 
 [dependencies]
 
-[build]
-target = "wasm32-wasi"
-
 [lib]
 crate-type = ["cdylib"]
-
-[profile.release]
-lto = "fat"
-opt-level = "s"
