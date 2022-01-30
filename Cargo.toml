@@ -1,6 +1,7 @@
 [workspace]
 members = [
     # Crates (compiled as platform-native)
+    "crates/modformer_cli",
     "crates/modformer_core",
 
     # Modules (compiled as wasm32-wasi)
