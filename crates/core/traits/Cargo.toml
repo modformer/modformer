@@ -1,5 +1,5 @@
 [package]
-name = "modformer_fs_writer"
+name = "modformer_traits"
 version = "0.1.0"
 edition = "2021"
 
