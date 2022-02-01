@@ -40,7 +40,7 @@ content_path = "./input/content"
 # content by modules configured to do so.
 data_path = "./input/data"
 
-# Pipeline Read Stages
+# Pipeline Read Modules
 
 # Definition and configuration of the modules invoked sequentially as part of
 # the Read stage, where each module has some common definition, plus optional
@@ -55,7 +55,7 @@ data_path = "./input/data"
 # The name of the module to instantiate and invoke (this will be sought within
 # the module path as defined at the pipeline level, with a filename of
 # <module>.wasm). The module is expected to be WASI compatible.
-module = "modformer_fs"
+module = "modformer_fs_reader"
 
 # The implementation of the module - native modules (assumed to be built using
 # Rust) will be passed data using bincode serialization of the JSON data
@@ -76,3 +76,25 @@ text_files = [
     "*.toml",
     "*.xml",
 ]
+
+# ------------------------------------------------------------------------------
+
+# Pipeline Transform
+
+[pipeline.transform]
+
+[[pipeline.transform.modules]]
+
+# ------------------------------------------------------------------------------
+
+# Pipeline Write
+
+[pipeline.write]
+output_path = "./output"
+
+[[pipeline.write.modules]]
+module = "modformer_fs_writer"
+native = true
+
+[pipeline.write.modules.config]
+exclude_files = []
