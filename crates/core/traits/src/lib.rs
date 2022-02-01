@@ -1,8 +1,10 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
+use anyhow::Result;
+use async_trait::async_trait;
+use serde_json::Value;
+
+// Module
+
+#[async_trait]
+pub trait Reader {
+    async fn read(&self, fs: &mut Value) -> Result<()>;
 }

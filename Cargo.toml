@@ -7,6 +7,9 @@ members = [
 
     # Modules
     "crates/modules/fs",
+
+    # Example
+    "example/site_builder",
 ]
 
 [profile.release]

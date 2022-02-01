@@ -1,0 +1,12 @@
+[package]
+name = "site_builder"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0"
+modformer_cli = { path = "../../crates/core/cli" }
+modformer_core = { path = "../../crates/core/core" }
+modformer_traits = { path = "../../crates/core/traits" }
+modformer_fs = { path = "../../crates/modules/fs" }
+tokio = { version = "1", features = ["full"] }
