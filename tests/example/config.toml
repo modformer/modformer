@@ -17,7 +17,9 @@ base_url = "https://example.com"
 [pipeline]
 
 # The directory containing installed modules (this path will be searched for
-# required modules as defined within the pipeline stages)
+# required modules as defined within the pipeline stages).
+#
+# Optional - default: "./modules"
 module_path = "../../target/wasm32-wasi/debug/"
 
 # ------------------------------------------------------------------------------
@@ -54,13 +56,26 @@ data_path = "./input/data"
 
 # The name of the module to instantiate and invoke (this will be sought within
 # the module path as defined at the pipeline level, with a filename of
-# <module>.wasm). The module is expected to be WASI compatible.
+# <module>.wasm).
 module = "modformer_fs_reader"
+
+# The WASI status of the module - if the module is compiled against a WASI
+# profile, and can run in a sandbox, setting this to true will provide the
+# module with a suitably configured WASI context. For modules which are not
+# WASI compatible due to requirements for resource usage currently outside the
+# WASI specification, setting this to false will result in the module being run
+# in an effectively "trusted" mode without access restrictions to host
+# resources.
+#
+# Optional - default: true
+sandbox = true
 
 # The implementation of the module - native modules (assumed to be built using
 # Rust) will be passed data using bincode serialization of the JSON data
 # structure rather than text encoding, to improve performance. Modules which
 # are not implemented in Rust will be passed data using UTF-8 encoded JSON.
+#
+# Optional - default: true
 native = true
 
 # Configuration of the module defined above (forming a sub-table within the
@@ -68,7 +83,7 @@ native = true
 # as a JSON value. For specific configuration options and capabilities of the
 # modules that follow, consult the individual module documentation.
 [pipeline.read.modules.config]
-text_files = [
+text_files = [ # optional - default: []
     "*.js",
     "*.json",
     "*.md",
