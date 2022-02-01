@@ -5,7 +5,8 @@ members = [
     "crates/modformer_core",
 
     # Modules (compiled as wasm32-wasi)
-    "modules/modformer_fs",
+    "modules/modformer_fs_reader",
+    "modules/modformer_fs_writer",
 ]
 
 [profile.release]
