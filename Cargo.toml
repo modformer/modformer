@@ -1,12 +1,12 @@
 [workspace]
 members = [
-    # Crates (compiled as platform-native)
+    # Core
     "crates/modformer_cli",
     "crates/modformer_core",
 
-    # Modules (compiled as wasm32-wasi)
-    "modules/modformer_fs_reader",
-    "modules/modformer_fs_writer",
+    # Modules
+    "crates/modformer_fs_reader",
+    "crates/modformer_fs_writer",
 ]
 
 [profile.release]
