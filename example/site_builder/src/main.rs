@@ -10,20 +10,20 @@ use modformer_fs::Fs;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let read = core();
     let metadata = metadata();
+    let transformer = transformer();
 
-    Runner::new(metadata, read).run().await
-}
-
-// Core
-
-fn core<'a>() -> Read<'a> {
-    Read::new().then(Fs::new()).finalize()
+    Runner::new(metadata, transformer).run().await
 }
 
 // Metadata
 
 fn metadata<'a>() -> Metadata<'a> {
     Metadata::new("Some Author", "Some Description", "1.0.0")
+}
+
+// Transformer
+
+fn transformer<'a>() -> Read<'a> {
+    Read::new().then(Fs::new()).finalize()
 }

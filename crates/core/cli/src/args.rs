@@ -1,6 +1,7 @@
 use clap::{
     App,
     AppSettings,
+    Arg,
 };
 
 use crate::{
@@ -8,29 +9,56 @@ use crate::{
     Metadata,
 };
 
+// Content
+
+const BEFORE: &str = r#"
+"#;
+
+const AFTER: &str = r#"For help with building modular transformers, visit https://modformer.com.
+For help with this implementation, please contact the author.
+
+Built with Modformer (https://modformer.com)."#;
+
+// App
+
 pub(crate) fn app<'a>(metadata: &Metadata<'a>) -> App<'a> {
     let name = utils::get_exec_name().expect("exec name expected");
-    let info = "Built with Modformer (https://modformer.com)";
 
     App::new(&name)
-
-        // Metadata and Display
         .about(metadata.description)
-        .after_help(info)
         .author(metadata.author)
         .version(metadata.version)
-
-        // Program Name
+        .after_help(AFTER)
+        .before_help(BEFORE)
         .bin_name(&name)
-
-        // Settings
         .global_setting(AppSettings::PropagateVersion)
         .setting(AppSettings::SubcommandRequiredElseHelp)
+        .args([arg_verbosity()])
+        .subcommands([subcommand_build(&name, metadata)])
+}
 
-        // Subcommands
-        .subcommands([
-            App::new("build")
-                .about("Build the site using provided configuration")
-                .bin_name(&name),
-        ])
+// Args
+
+fn arg_verbosity<'a>() -> Arg<'a> {
+    Arg::new("verbosity")
+        .long("verbosity")
+        .short('v')
+        .env("VERBOSITY")
+        .takes_value(true)
+        .value_name("LEVEL")
+        .possible_values(&["debug", "info", "warn", "error", "none"])
+        .default_value("none")
+        .number_of_values(1)
+        .help("Sets the level of logging output")
+}
+
+// Subcommands
+
+fn subcommand_build<'a>(name: &str, metadata: &Metadata<'a>) -> App<'a> {
+    App::new("build")
+        .about("Build the site using provided configuration")
+        .author(metadata.author)
+        .after_help(AFTER)
+        .before_help(BEFORE)
+        .bin_name(name)
 }
