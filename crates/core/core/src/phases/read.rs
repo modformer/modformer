@@ -1,5 +1,8 @@
+use std::fmt::Debug;
+
 use modformer_traits::Reader;
 
+#[derive(Debug)]
 pub struct Read<'a> {
     readers: Vec<Box<dyn Reader + 'a>>,
 }

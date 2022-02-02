@@ -28,23 +28,33 @@ pub(crate) fn new<'a>(metadata: &Metadata<'a>) -> App<'a> {
         .bin_name(&name)
         .global_setting(AppSettings::PropagateVersion)
         .setting(AppSettings::SubcommandRequiredElseHelp)
-        .args([arg_verbosity()])
+        .args([arg_tracing(), arg_tracing_pretty()])
         .subcommands([subcommand_build(&name, metadata)])
 }
 
 // Args
 
-fn arg_verbosity<'a>() -> Arg<'a> {
-    Arg::new("verbosity")
-        .long("verbosity")
-        .short('v')
-        .env("VERBOSITY")
+fn arg_tracing<'a>() -> Arg<'a> {
+    Arg::new("tracing")
+        .long("tracing")
+        .short('t')
+        .env("TRACING")
         .takes_value(true)
         .value_name("LEVEL")
-        .possible_values(&["debug", "info", "warn", "error", "none"])
-        .default_value("none")
-        .number_of_values(1)
-        .help("Sets the level of logging output")
+        .possible_values(&["trace", "debug", "info", "warn", "error"])
+        .default_missing_value("info")
+        .min_values(0)
+        .max_values(1)
+        .require_equals(true)
+        .help("Set level for tracing output")
+}
+
+fn arg_tracing_pretty<'a>() -> Arg<'a> {
+    Arg::new("tracing_pretty")
+        .long("pretty")
+        .short('p')
+        .max_occurrences(1)
+        .help("Enable pretty printing for tracing output")
 }
 
 // Subcommands
