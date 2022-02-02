@@ -1,7 +1,8 @@
-mod args;
+mod app;
 mod utils;
 
 use anyhow::Result;
+use clap::ArgMatches;
 use modformer_core::phases::Read;
 
 // Metadata
@@ -40,10 +41,18 @@ impl<'a> Runner<'a> {
             _read: read,
         }
     }
+}
 
+impl<'a> Runner<'a> {
     pub async fn run(&self) -> Result<()> {
-        let app = args::app(&self.metadata);
-        let _matches = app.get_matches();
+        match app::new(&self.metadata).get_matches().subcommand() {
+            Some(("build", arg_matches)) => self.build(arg_matches).await,
+            _ => Ok(()),
+        }
+    }
+
+    async fn build(&self, arg_matches: &ArgMatches) -> Result<()> {
+        println!("Build: {:#?}", arg_matches);
 
         Ok(())
     }

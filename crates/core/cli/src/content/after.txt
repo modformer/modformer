@@ -1,0 +1,4 @@
+For help with building modular transformers, visit https://modformer.com.
+For help with this implementation, please contact the author.
+
+Built with Modformer (https://modformer.com).
