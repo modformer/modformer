@@ -1,0 +1,7 @@
+[package]
+name = "modformer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+modformer_model = { path = "../modformer_model" }

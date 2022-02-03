@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use modformer_traits::Reader;
+use modformer_model::Reader;
 
 #[derive(Debug)]
 pub struct Read<'a> {

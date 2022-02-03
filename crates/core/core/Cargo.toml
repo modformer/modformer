@@ -1,7 +1,0 @@
-[package]
-name = "modformer_core"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-modformer_traits = { path = "../traits" }

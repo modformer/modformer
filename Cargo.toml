@@ -1,12 +1,13 @@
 [workspace]
 members = [
     # Core
-    "crates/core/cli",
-    "crates/core/core",
-    "crates/core/traits",
+    "crates/modformer",
+    "crates/modformer_cli",
+    "crates/modformer_model",
+    "crates/modformer_transformer",
 
     # Modules
-    "crates/modules/fs",
+    "crates/modules/modformer_fs",
 
     # Example
     "example/site_builder",

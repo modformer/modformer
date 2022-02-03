@@ -3,7 +3,7 @@ mod utils;
 
 use anyhow::Result;
 use clap::ArgMatches;
-use modformer_core::phases::Read;
+use modformer_transformer::phases::Read;
 use time::format_description;
 use tracing::{
     debug,

@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0"
 clap = { version = "3.0", features = ["env"] }
-modformer_core = { path = "../core" }
-modformer_traits = { path = "../traits" }
+modformer_model = { path = "../modformer_model" }
+modformer_transformer = { path = "../modformer_transformer" }
 time = { version = "0.3", features = ["formatting", "local-offset"]}
 tracing = "0.1"
 tracing-futures = "0.2"

@@ -5,8 +5,9 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0"
-modformer_cli = { path = "../../crates/core/cli" }
-modformer_core = { path = "../../crates/core/core" }
-modformer_traits = { path = "../../crates/core/traits" }
-modformer_fs = { path = "../../crates/modules/fs" }
+# modformer = { path = "../../crates/modformer" }
+modformer_cli = { path = "../../crates/modformer_cli" }
+modformer_model = { path = "../../crates/modformer_model" }
+modformer_transformer = { path = "../../crates/modformer_transformer" }
+modformer_fs = { path = "../../crates/modules/modformer_fs" }
 tokio = { version = "1", features = ["full"] }
