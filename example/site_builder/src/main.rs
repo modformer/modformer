@@ -1,10 +1,12 @@
 use anyhow::Result;
-use modformer_cli::{
-    Metadata,
-    Runner,
+use modformer::{
+    cli::{
+        Runner,
+        RunnerMetadata,
+    },
+    transformer::phases::Read,
 };
 use modformer_fs::Fs;
-use modformer_transformer::phases::Read;
 
 // App
 
@@ -18,8 +20,8 @@ async fn main() -> Result<()> {
 
 // Metadata
 
-fn metadata<'a>() -> Metadata<'a> {
-    Metadata::new("Some Author", "Some Description", "1.0.0")
+fn metadata<'a>() -> RunnerMetadata<'a> {
+    RunnerMetadata::new("Some Author", "Some Description", "1.0.0")
 }
 
 // Transformer

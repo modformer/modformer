@@ -19,13 +19,13 @@ use tracing_subscriber::{
 // Metadata
 
 #[derive(Debug)]
-pub struct Metadata<'a> {
+pub struct RunnerMetadata<'a> {
     author: &'a str,
     description: &'a str,
     version: &'a str,
 }
 
-impl<'a> Metadata<'a> {
+impl<'a> RunnerMetadata<'a> {
     pub fn new(
         author: impl Into<&'a str>,
         description: impl Into<&'a str>,
@@ -43,12 +43,12 @@ impl<'a> Metadata<'a> {
 
 #[derive(Debug)]
 pub struct Runner<'a> {
-    metadata: Metadata<'a>,
+    metadata: RunnerMetadata<'a>,
     _read: Read<'a>,
 }
 
 impl<'a> Runner<'a> {
-    pub fn new(metadata: Metadata<'a>, read: Read<'a>) -> Self {
+    pub fn new(metadata: RunnerMetadata<'a>, read: Read<'a>) -> Self {
         Self {
             metadata,
             _read: read,

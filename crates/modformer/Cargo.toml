@@ -3,5 +3,11 @@ name = "modformer"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+cli = ["modformer_cli"]
+transformer = ["modformer_transformer"]
+
 [dependencies]
+modformer_cli = { path = "../modformer_cli", optional = true }
 modformer_model = { path = "../modformer_model" }
+modformer_transformer = { path = "../modformer_transformer", optional = true }

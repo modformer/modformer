@@ -6,7 +6,7 @@ use clap::{
 
 use crate::{
     utils,
-    Metadata,
+    RunnerMetadata,
 };
 
 // Content
@@ -16,7 +16,7 @@ const CONTENT_BEFORE: &str = std::include_str!("./content/before.txt");
 
 // App
 
-pub(crate) fn new<'a>(metadata: &Metadata<'a>) -> App<'a> {
+pub(crate) fn new<'a>(metadata: &RunnerMetadata<'a>) -> App<'a> {
     let name = utils::get_exec_name().expect("exec name expected");
 
     App::new(&name)
@@ -59,7 +59,7 @@ fn arg_tracing_pretty<'a>() -> Arg<'a> {
 
 // Subcommands
 
-fn subcommand_build<'a>(name: &str, metadata: &Metadata<'a>) -> App<'a> {
+fn subcommand_build<'a>(name: &str, metadata: &RunnerMetadata<'a>) -> App<'a> {
     App::new("build")
         .about("Build the site using provided configuration")
         .author(metadata.author)

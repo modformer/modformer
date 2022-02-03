@@ -6,5 +6,5 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0"
 async-trait = "0.1"
-modformer_model = { path = "../../modformer_model" }
+modformer = { path = "../../modformer" }
 serde_json = "1.0"
