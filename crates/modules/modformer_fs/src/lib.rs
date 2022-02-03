@@ -1,6 +1,6 @@
 use anyhow::Result;
 use async_trait::async_trait;
-use modformer::Reader;
+use modformer::model::Reader;
 use serde_json::Value;
 
 #[derive(Debug)]
