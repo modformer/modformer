@@ -35,35 +35,35 @@ where
 // Read/Transform/Write Phases
 
 macro_rules! marker {
-    ($phase:ident) => {
+    ($p:ident) => {
         paste! {
             #[derive(Debug, Default)]
-            pub struct [<$phase:camel Marker>];
+            pub struct [<$p:camel Marker>];
 
-            impl State for [<$phase:camel Marker>] {}
+            impl State for [<$p:camel Marker>] {}
         }
     };
 }
 
 macro_rules! builder {
-    ($phase:ident, $next_phase:ident) => {
+    ($p:ident, $n:ident) => {
         paste! {
-            impl<'a> Builder<'a, [<$phase:camel Marker>]> {
-                pub fn [<with_ $phase:snake>]<F>(
+            impl<'a> Builder<'a, [<$p:camel Marker>]> {
+                pub fn [<with_ $p:snake>]<F>(
                     self,
-                    mut [<$phase:snake _fn>]: F
-                ) -> Builder<'a, [<$next_phase:camel Marker>]>
+                    mut [<$p:snake _fn>]: F
+                ) -> Builder<'a, [<$n:camel Marker>]>
                 where
-                    F: FnMut([<$phase:camel Collector>]<'a>) -> Vec<Box<dyn [<$phase:camel>] + 'a>>,
+                    F: FnMut([<$p:camel Collector>]<'a>) -> Vec<Box<dyn [<$p:camel>] + 'a>>,
                 {
-                    let mut builder = Builder::<'a, [<$next_phase:camel Marker>]> {
+                    let mut builder = Builder::<'a, [<$n:camel Marker>]> {
                         read: self.read,
                         transform: self.transform,
                         write: self.write,
                         ..Default::default()
                     };
 
-                    builder.[<$phase:snake>] = [<$phase:snake _fn>]([<$phase:camel Collector>]::new());
+                    builder.[<$p:snake>] = [<$p:snake _fn>]([<$p:camel Collector>]::new());
                     builder
                 }
             }
@@ -72,26 +72,26 @@ macro_rules! builder {
 }
 
 macro_rules! collector {
-    ($phase:ident) => {
+    ($p:ident) => {
         paste! {
             #[derive(Debug, Default)]
-            pub struct [<$phase:camel Collector>]<'a> {
-                collected: Vec<Box<dyn [<$phase:camel>] + 'a>>,
+            pub struct [<$p:camel Collector>]<'a> {
+                collected: Vec<Box<dyn [<$p:camel>] + 'a>>,
             }
 
-            impl<'a> [<$phase:camel Collector>]<'a> {
+            impl<'a> [<$p:camel Collector>]<'a> {
                 pub fn new() -> Self {
                     Default::default()
                 }
             }
 
-            impl<'a> [<$phase:camel Collector>]<'a> {
-                pub fn push(mut self, [<$phase:snake>]: impl [<$phase:camel>] + 'a) -> Self {
-                    self.collected.push(Box::new([<$phase:snake>]));
+            impl<'a> [<$p:camel Collector>]<'a> {
+                pub fn push(mut self, [<$p:snake>]: impl [<$p:camel>] + 'a) -> Self {
+                    self.collected.push(Box::new([<$p:snake>]));
                     self
                 }
 
-                pub fn collect(self) -> Vec<Box<dyn [<$phase:camel>] + 'a>> {
+                pub fn collect(self) -> Vec<Box<dyn [<$p:camel>] + 'a>> {
                     self.collected
                 }
             }
@@ -100,10 +100,10 @@ macro_rules! collector {
 }
 
 macro_rules! phase {
-    ($phase:ident, $next_phase:ident) => {
-        marker!($phase);
-        builder!($phase, $next_phase);
-        collector!($phase);
+    ($p:ident, $n:ident) => {
+        marker!($p);
+        builder!($p, $n);
+        collector!($p);
     };
 }
 
