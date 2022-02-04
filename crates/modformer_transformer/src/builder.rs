@@ -9,6 +9,16 @@ use paste::paste;
 
 use super::Transformer;
 
+// Transformer
+
+impl<'a> Transformer<'a> {
+    pub fn build() -> Builder<'a, ReadMarker> {
+        Builder::<'a, ReadMarker>::default()
+    }
+}
+
+// Builder and State
+
 pub trait State {}
 
 #[derive(Debug, Default)]
@@ -21,6 +31,8 @@ where
     transform: Vec<Box<dyn Transform + 'a>>,
     write: Vec<Box<dyn Write + 'a>>,
 }
+
+// Read/Transform/Write Phases
 
 macro_rules! marker {
     ($phase:ident) => {
@@ -97,20 +109,21 @@ macro_rules! phase {
 
 phase!(read, transform);
 phase!(transform, write);
-phase!(write, write);
+phase!(write, finalize);
 
-impl<'a> Builder<'a, WriteMarker> {
+// Finalize Phase
+
+#[derive(Debug, Default)]
+pub struct FinalizeMarker;
+
+impl State for FinalizeMarker {}
+
+impl<'a> Builder<'a, FinalizeMarker> {
     pub fn finalize(self) -> Transformer<'a> {
         Transformer {
             _read: self.read,
             _transform: self.transform,
             _write: self.write,
         }
-    }
-}
-
-impl<'a> Transformer<'a> {
-    pub fn build() -> Builder<'a, ReadMarker> {
-        Builder::<'a, ReadMarker>::default()
     }
 }
