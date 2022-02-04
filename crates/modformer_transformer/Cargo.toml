@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 modformer_model = { path = "../modformer_model" }
+paste = "1.0"

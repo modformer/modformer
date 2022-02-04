@@ -4,16 +4,18 @@ use modformer::{
         Runner,
         RunnerMetadata,
     },
-    transformer::Transformer,
+    transformer::Modformer,
 };
 use modformer_fs::Fs;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let metadata = RunnerMetadata::new("Some Author", "Some Description", "1.0.0");
-    let transformer = Transformer::build()
-        .with_readers(|rs| rs.push(Fs::new()))
+    let modformer = Modformer::build()
+        .with_readers(|rs| rs.push(Fs::new()).collect())
+        .with_transformers(|ts| ts.collect())
+        .with_writers(|ws| ws.collect())
         .finalize();
 
-    Runner::new(metadata, transformer).run().await
+    Runner::new(metadata, modformer).run().await
 }

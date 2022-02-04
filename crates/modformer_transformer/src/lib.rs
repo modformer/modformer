@@ -1,15 +1,14 @@
 mod builder;
 
-use builder::{
-    read::Read,
-    Builder,
+use modformer_model::{
+    Reader,
+    Transformer,
+    Writer,
 };
 
-#[derive(Debug)]
-pub struct Transformer {}
-
-impl Transformer {
-    pub fn build() -> Builder<Read> {
-        builder::init()
-    }
+#[derive(Debug, Default)]
+pub struct Modformer<'a> {
+    _readers: Vec<Box<dyn Reader + 'a>>,
+    _transformers: Vec<Box<dyn Transformer + 'a>>,
+    _writers: Vec<Box<dyn Writer + 'a>>,
 }
