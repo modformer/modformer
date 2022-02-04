@@ -1,14 +1,14 @@
 mod builder;
 
 use modformer_model::{
-    Reader,
-    Transformer,
-    Writer,
+    Read,
+    Transform,
+    Write,
 };
 
 #[derive(Debug, Default)]
-pub struct Modformer<'a> {
-    _readers: Vec<Box<dyn Reader + 'a>>,
-    _transformers: Vec<Box<dyn Transformer + 'a>>,
-    _writers: Vec<Box<dyn Writer + 'a>>,
+pub struct Transformer<'a> {
+    _read: Vec<Box<dyn Read + 'a>>,
+    _transform: Vec<Box<dyn Transform + 'a>>,
+    _write: Vec<Box<dyn Write + 'a>>,
 }

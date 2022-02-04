@@ -1,6 +1,6 @@
 use anyhow::Result;
 use async_trait::async_trait;
-use modformer::model::Reader;
+use modformer::model::Read;
 use serde_json::Value;
 
 #[derive(Debug)]
@@ -13,7 +13,7 @@ impl Fs {
 }
 
 #[async_trait]
-impl Reader for Fs {
+impl Read for Fs {
     async fn read(&self, _fs: &mut Value) -> Result<()> {
         Ok(())
     }

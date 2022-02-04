@@ -1,13 +1,13 @@
 use std::marker::PhantomData;
 
 use modformer_model::{
-    Reader,
-    Transformer,
-    Writer,
+    Read,
+    Transform,
+    Write,
 };
 use paste::paste;
 
-use super::Modformer;
+use super::Transformer;
 
 pub trait State {}
 
@@ -17,41 +17,41 @@ where
     T: State,
 {
     _t: PhantomData<T>,
-    readers: Vec<Box<dyn Reader + 'a>>,
-    transformers: Vec<Box<dyn Transformer + 'a>>,
-    writers: Vec<Box<dyn Writer + 'a>>,
+    read: Vec<Box<dyn Read + 'a>>,
+    transform: Vec<Box<dyn Transform + 'a>>,
+    write: Vec<Box<dyn Write + 'a>>,
 }
 
 macro_rules! marker {
-    ($verb:ident) => {
+    ($phase:ident) => {
         paste! {
             #[derive(Debug, Default)]
-            pub struct [<$verb:camel>];
+            pub struct [<$phase:camel Marker>];
 
-            impl State for [<$verb:camel>] {}
+            impl State for [<$phase:camel Marker>] {}
         }
     };
 }
 
 macro_rules! builder {
-    ($verb:ident, $noun:ident, $next:ident) => {
+    ($phase:ident, $next_phase:ident) => {
         paste! {
-            impl<'a> Builder<'a, [<$verb:camel>]> {
-                pub fn [<with_ $noun:snake s>]<F>(
+            impl<'a> Builder<'a, [<$phase:camel Marker>]> {
+                pub fn [<with_ $phase:snake>]<F>(
                     self,
-                    mut [<$noun:snake s_fn>]: F
-                ) -> Builder<'a, [<$next:camel>]>
+                    mut [<$phase:snake _fn>]: F
+                ) -> Builder<'a, [<$next_phase:camel Marker>]>
                 where
-                    F: FnMut([<$noun:camel s>]<'a>) -> Vec<Box<dyn [<$noun:camel>] + 'a>>,
+                    F: FnMut([<$phase:camel Collector>]<'a>) -> Vec<Box<dyn [<$phase:camel>] + 'a>>,
                 {
-                    let mut builder = Builder::<'a, [<$next:camel>]> {
-                        readers: self.readers,
-                        transformers: self.transformers,
-                        writers: self.writers,
+                    let mut builder = Builder::<'a, [<$next_phase:camel Marker>]> {
+                        read: self.read,
+                        transform: self.transform,
+                        write: self.write,
                         ..Default::default()
                     };
 
-                    builder.[<$noun:snake s>] = [<$noun:snake s_fn>]([<$noun:camel s>]::new());
+                    builder.[<$phase:snake>] = [<$phase:snake _fn>]([<$phase:camel Collector>]::new());
                     builder
                 }
             }
@@ -60,27 +60,27 @@ macro_rules! builder {
 }
 
 macro_rules! collector {
-    ($noun:ident) => {
+    ($phase:ident) => {
         paste! {
             #[derive(Debug, Default)]
-            pub struct [<$noun:camel s>]<'a> {
-                [<$noun:snake s>]: Vec<Box<dyn [<$noun:camel>] + 'a>>,
+            pub struct [<$phase:camel Collector>]<'a> {
+                collected: Vec<Box<dyn [<$phase:camel>] + 'a>>,
             }
 
-            impl<'a> [<$noun:camel s>]<'a> {
+            impl<'a> [<$phase:camel Collector>]<'a> {
                 pub fn new() -> Self {
                     Default::default()
                 }
             }
 
-            impl<'a> [<$noun:camel s>]<'a> {
-                pub fn push(mut self, [<$noun:snake>]: impl [<$noun:camel>] + 'a) -> Self {
-                    self.[<$noun:snake s>].push(Box::new([<$noun:snake>]));
+            impl<'a> [<$phase:camel Collector>]<'a> {
+                pub fn push(mut self, [<$phase:snake>]: impl [<$phase:camel>] + 'a) -> Self {
+                    self.collected.push(Box::new([<$phase:snake>]));
                     self
                 }
 
-                pub fn collect(self) -> Vec<Box<dyn [<$noun:camel>] + 'a>> {
-                    self.[<$noun:snake s>]
+                pub fn collect(self) -> Vec<Box<dyn [<$phase:camel>] + 'a>> {
+                    self.collected
                 }
             }
         }
@@ -88,29 +88,29 @@ macro_rules! collector {
 }
 
 macro_rules! phase {
-    ($verb:ident, $noun:ident, $next:ident) => {
-        marker!($verb);
-        builder!($verb, $noun, $next);
-        collector!($noun);
+    ($phase:ident, $next_phase:ident) => {
+        marker!($phase);
+        builder!($phase, $next_phase);
+        collector!($phase);
     };
 }
 
-phase!(read, reader, transform);
-phase!(transform, transformer, write);
-phase!(write, writer, write);
+phase!(read, transform);
+phase!(transform, write);
+phase!(write, write);
 
-impl<'a> Builder<'a, Write> {
-    pub fn finalize(self) -> Modformer<'a> {
-        Modformer {
-            _readers: self.readers,
-            _transformers: self.transformers,
-            _writers: self.writers,
+impl<'a> Builder<'a, WriteMarker> {
+    pub fn finalize(self) -> Transformer<'a> {
+        Transformer {
+            _read: self.read,
+            _transform: self.transform,
+            _write: self.write,
         }
     }
 }
 
-impl<'a> Modformer<'a> {
-    pub fn build() -> Builder<'a, Read> {
-        Builder::<'a, Read>::default()
+impl<'a> Transformer<'a> {
+    pub fn build() -> Builder<'a, ReadMarker> {
+        Builder::<'a, ReadMarker>::default()
     }
 }

@@ -7,16 +7,16 @@ use serde_json::Value;
 // Module
 
 #[async_trait]
-pub trait Reader: Debug {
+pub trait Read: Debug {
     async fn read(&self, fs: &mut Value) -> Result<()>;
 }
 
 #[async_trait]
-pub trait Transformer: Debug {
+pub trait Transform: Debug {
     async fn transform(&self, fs: &mut Value) -> Result<()>;
 }
 
 #[async_trait]
-pub trait Writer: Debug {
+pub trait Write: Debug {
     async fn write(&self, fs: &mut Value) -> Result<()>;
 }

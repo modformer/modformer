@@ -3,7 +3,7 @@ mod utils;
 
 use anyhow::Result;
 use clap::ArgMatches;
-use modformer_transformer::Modformer;
+use modformer_transformer::Transformer;
 use time::format_description;
 use tracing::{
     debug,
@@ -44,14 +44,14 @@ impl<'a> RunnerMetadata<'a> {
 #[derive(Debug)]
 pub struct Runner<'a> {
     metadata: RunnerMetadata<'a>,
-    _modformer: Modformer<'a>,
+    _transformer: Transformer<'a>,
 }
 
 impl<'a> Runner<'a> {
-    pub fn new(metadata: RunnerMetadata<'a>, modformer: Modformer<'a>) -> Self {
+    pub fn new(metadata: RunnerMetadata<'a>, transformer: Transformer<'a>) -> Self {
         Self {
             metadata,
-            _modformer: modformer,
+            _transformer: transformer,
         }
     }
 
