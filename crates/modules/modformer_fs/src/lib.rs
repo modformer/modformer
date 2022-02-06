@@ -1,7 +1,9 @@
 use anyhow::Result;
 use async_trait::async_trait;
-use modformer::model::Read;
-use serde_json::Value;
+use modformer::{
+    data::Vfs,
+    process::Read,
+};
 
 #[derive(Debug)]
 pub struct Fs {}
@@ -14,7 +16,7 @@ impl Fs {
 
 #[async_trait]
 impl Read for Fs {
-    async fn read(&self, _fs: &mut Value) -> Result<()> {
+    async fn read(&self, _vfs: &mut Vfs) -> Result<()> {
         Ok(())
     }
 }

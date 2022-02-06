@@ -1,6 +1,6 @@
 mod builder;
 
-use modformer_model::{
+use modformer_model::process::{
     Read,
     Transform,
     Write,
