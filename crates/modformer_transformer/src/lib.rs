@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 mod builder;
 
 use modformer_model::process::{

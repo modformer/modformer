@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 // Core
 
 pub use modformer_model::*;
