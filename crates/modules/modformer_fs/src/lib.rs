@@ -3,7 +3,7 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use modformer::{
-    data::Vfs,
+    data::FileSystem,
     process::Read,
 };
 
@@ -18,7 +18,7 @@ impl Fs {
 
 #[async_trait]
 impl Read for Fs {
-    async fn read(&self, _vfs: &mut Vfs) -> Result<()> {
+    async fn read(&self, _fs: &mut FileSystem) -> Result<()> {
         Ok(())
     }
 }
