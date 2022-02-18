@@ -1,13 +1,13 @@
 use super::directory::{
     Directory,
-    DirectoryStrong,
+    StrongDirectory,
 };
 
 const ROOT_DIR_NAME: &str = "<ROOT>";
 
 #[derive(Debug)]
 pub struct FileSystem<'a> {
-    pub(crate) root: DirectoryStrong<'a>,
+    pub(crate) root: StrongDirectory<'a>,
 }
 
 impl<'a> FileSystem<'a> {

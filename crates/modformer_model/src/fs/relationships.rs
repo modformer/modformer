@@ -7,22 +7,22 @@ use tokio::sync::RwLock;
 
 use super::{
     directory::{
-        DirectoryStrong,
-        DirectoryWeak,
+        StrongDirectory,
+        WeakDirectory,
     },
-    file::FileStrong,
+    file::StrongFile,
 };
 
 #[derive(Debug)]
 pub enum Parent<'a> {
-    Directory(DirectoryWeak<'a>),
+    Directory(WeakDirectory<'a>),
 }
 
 #[derive(Debug)]
 pub enum Child<'a> {
-    Directory(DirectoryStrong<'a>),
-    File(FileStrong<'a>),
+    Directory(StrongDirectory<'a>),
+    File(StrongFile<'a>),
 }
 
 pub type Children<'a> = HashMap<&'a str, Child<'a>>;
-pub type ChildrenStrong<'a> = Arc<RwLock<Children<'a>>>;
+pub type StrongChildren<'a> = Arc<RwLock<Children<'a>>>;

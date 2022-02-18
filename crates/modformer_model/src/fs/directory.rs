@@ -14,30 +14,30 @@ use super::{
     file_system::FileSystem,
     relationships::{
         Child,
-        ChildrenStrong,
         Parent,
+        StrongChildren,
     },
 };
 
 #[derive(Debug)]
 pub struct Directory<'a> {
-    children: ChildrenStrong<'a>,
-    directory: DirectoryWeak<'a>,
+    children: StrongChildren<'a>,
+    directory: WeakDirectory<'a>,
     name: &'a str,
     _parent: Option<Parent<'a>>,
 }
 
-pub type DirectoryStrong<'a> = Arc<RwLock<Directory<'a>>>;
-pub type DirectoryWeak<'a> = Weak<RwLock<Directory<'a>>>;
+pub type StrongDirectory<'a> = Arc<RwLock<Directory<'a>>>;
+pub type WeakDirectory<'a> = Weak<RwLock<Directory<'a>>>;
 
-impl<'a> Into<Child<'a>> for DirectoryStrong<'a> {
+impl<'a> Into<Child<'a>> for StrongDirectory<'a> {
     fn into(self) -> Child<'a> {
         Child::Directory(self)
     }
 }
 
 impl<'a> Directory<'a> {
-    fn new<N>(name: N, directory: DirectoryWeak<'a>, parent: Option<Parent<'a>>) -> Self
+    fn new<N>(name: N, directory: WeakDirectory<'a>, parent: Option<Parent<'a>>) -> Self
     where
         N: Into<&'a str>,
     {
@@ -49,7 +49,7 @@ impl<'a> Directory<'a> {
         }
     }
 
-    pub fn strong<N>(name: N, parent: Option<Parent<'a>>) -> DirectoryStrong<'a>
+    pub fn strong<N>(name: N, parent: Option<Parent<'a>>) -> StrongDirectory<'a>
     where
         N: Into<&'a str>,
     {

@@ -6,7 +6,7 @@ use anyhow::Result;
 //     transformer::Transformer,
 // };
 // use modformer_fs::Fs;
-use modformer::file_system::*;
+use modformer::fs::*;
 
 #[tokio::main]
 async fn main() -> Result<()> {

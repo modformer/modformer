@@ -16,9 +16,9 @@ pub struct File<'a> {
     _parent: Parent<'a>,
 }
 
-pub(crate) type FileStrong<'a> = Arc<RwLock<File<'a>>>;
+pub type StrongFile<'a> = Arc<RwLock<File<'a>>>;
 
-impl<'a> Into<Child<'a>> for FileStrong<'a> {
+impl<'a> Into<Child<'a>> for StrongFile<'a> {
     fn into(self) -> Child<'a> {
         Child::File(self)
     }
@@ -36,7 +36,7 @@ impl<'a> File<'a> {
         }
     }
 
-    pub fn strong<N>(name: N, content: String, parent: Parent<'a>) -> FileStrong<'a>
+    pub fn strong<N>(name: N, content: String, parent: Parent<'a>) -> StrongFile<'a>
     where
         N: Into<&'a str>,
     {

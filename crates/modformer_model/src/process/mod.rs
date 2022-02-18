@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use anyhow::Result;
 use async_trait::async_trait;
 
-use crate::file_system::FileSystem;
+use crate::fs::FileSystem;
 
 // Module
 
