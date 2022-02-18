@@ -1,10 +1,9 @@
 use std::{
     collections::HashMap,
-    sync::{
-        Arc,
-        RwLock,
-    },
+    sync::Arc,
 };
+
+use tokio::sync::RwLock;
 
 use super::{
     directory::{

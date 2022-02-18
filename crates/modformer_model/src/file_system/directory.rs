@@ -1,6 +1,5 @@
 use std::sync::{
     Arc,
-    RwLock,
     Weak,
 };
 
@@ -8,6 +7,7 @@ use anyhow::{
     Error,
     Result,
 };
+use tokio::sync::RwLock;
 
 use super::{
     file::File,
@@ -23,7 +23,7 @@ use super::{
 pub struct Directory<'a> {
     children: ChildrenStrong<'a>,
     directory: DirectoryWeak<'a>,
-    _name: &'a str,
+    name: &'a str,
     _parent: Option<Parent<'a>>,
 }
 
@@ -44,7 +44,7 @@ impl<'a> Directory<'a> {
         Self {
             children: Default::default(),
             directory,
-            _name: name.into(),
+            name: name.into(),
             _parent: parent,
         }
     }
@@ -55,58 +55,76 @@ impl<'a> Directory<'a> {
     {
         Arc::new_cyclic(|dir| RwLock::new(Directory::new(name, dir.clone(), parent)))
     }
+
+    pub fn name(&self) -> &'a str {
+        self.name
+    }
 }
 
 impl<'a> Directory<'a> {
-    fn insert<C>(&self, name: &'a str, child: C) -> Result<()>
+    async fn insert<C>(&self, name: &'a str, child: C) -> Result<()>
     where
         C: Into<Child<'a>>,
     {
-        self.children
-            .try_write()
-            .map_err(|_| Error::msg("could not obtain parent directory lock"))?
-            .try_insert(name, child.into())
+        let mut children = self.children.write().await;
+        let child = child.into();
+        let res = children
+            .try_insert(name, child)
             .map(|_| ())
-            .map_err(|_| Error::msg("directory or file already exists"))
+            .map_err(|_| Error::msg(""));
+
+        res
     }
 }
 
 impl<'a> Directory<'a> {
-    pub fn create_dir<N>(fs: &FileSystem<'a>, name: N) -> Result<()>
+    pub async fn create_dir<N>(file_system: &FileSystem<'a>, name: N) -> Result<()>
     where
         N: Into<&'a str>,
     {
-        fs.read_root(|dir| dir.create_dir_internal(name))
+        let dir = file_system.root.read().await;
+        let res = dir.create_dir_internal(name).await;
+
+        res
     }
 
-    fn create_dir_internal<N>(&self, name: N) -> Result<()>
+    async fn create_dir_internal<N>(&self, name: N) -> Result<()>
     where
         N: Into<&'a str>,
     {
         let name = name.into();
         let parent = Parent::Directory(self.directory.clone());
         let dir = Directory::strong(name, Some(parent));
+        let res = self.insert(name, dir).await;
 
-        self.insert(name, dir)
+        res
     }
 }
 
 impl<'a> Directory<'a> {
-    pub fn create_file<N>(fs: &FileSystem<'a>, name: N, content: String) -> Result<()>
+    pub async fn create_file<N>(
+        file_system: &FileSystem<'a>,
+        name: N,
+        content: String,
+    ) -> Result<()>
     where
         N: Into<&'a str>,
     {
-        fs.read_root(|dir| dir.create_file_internal(name, content))
+        let dir = file_system.root.read().await;
+        let res = dir.create_file_internal(name, content).await;
+
+        res
     }
 
-    fn create_file_internal<N>(&self, name: N, content: String) -> Result<()>
+    async fn create_file_internal<N>(&self, name: N, content: String) -> Result<()>
     where
         N: Into<&'a str>,
     {
         let name = name.into();
         let parent = Parent::Directory(self.directory.clone());
         let file = File::strong(name, content, parent);
+        let res = self.insert(name, file).await;
 
-        self.insert(name, file)
+        res
     }
 }

@@ -3,7 +3,7 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use modformer::{
-    data::FileSystem,
+    file_system::FileSystem,
     process::Read,
 };
 

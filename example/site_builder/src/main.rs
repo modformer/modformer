@@ -6,13 +6,13 @@ use anyhow::Result;
 //     transformer::Transformer,
 // };
 // use modformer_fs::Fs;
-use modformer::data::*;
+use modformer::file_system::*;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let fs = FileSystem::new();
-    let _ = Directory::create_dir(&fs, "test_1")?;
-    let _ = Directory::create_file(&fs, "test_2", "Hello World".into())?;
+    let _ = Directory::create_dir(&fs, "test_1").await?;
+    let _ = Directory::create_file(&fs, "test_2", "Hello World".into()).await?;
 
     dbg!(fs);
 
